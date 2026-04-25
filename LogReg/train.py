@@ -1,6 +1,7 @@
 import numpy as np
 from pathlib import Path
 from LogReg.softmax_regression import SoftmaxRegression 
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 data_path = Path("data/processed")
@@ -22,3 +23,11 @@ softmax_pred_res = softmax_regression.predict(X_test)
 softmax_accuracy = accuracy_score(y_test, softmax_pred_res)
 
 print(f'Softmax-regression accuracy: {softmax_accuracy}')
+
+
+sk_softmax_regression = LogisticRegression(max_iter=1000)
+sk_softmax_regression.fit(X_train, y_train)
+sk_softmax_pred_res = sk_softmax_regression.predict(X_test)
+sk_softmax_accuracy = accuracy_score(y_test, sk_softmax_pred_res)
+
+print(f'sk Softmax-regression accuracy: {sk_softmax_accuracy}')
