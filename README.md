@@ -28,3 +28,69 @@
 Сейчас проект открытый, но коммитить туда могут только дозволенные лица, вроде.
 
 ## :)
+
+## Как использовать датасет в коде нейронки (WSL)
+
+### 1) Подготовка окружения
+
+```bash
+cd /mnt/c/Users/artem/Downloads/Handwriting-Recognition
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Если `.venv` уже создан, достаточно:
+
+```bash
+cd /mnt/c/Users/artem/Downloads/Handwriting-Recognition
+source .venv/bin/activate
+```
+
+### 2) Файлы датасета
+
+Класс `MNISTDataset` ожидает, что в `data/processed` есть:
+
+- `train_images.npy`
+- `train_labels.npy`
+- `test_images.npy`
+- `test_labels.npy`
+
+### 3) Подключение для ML-разработчика
+
+Рекомендуемый способ: использовать `get_dataloaders` из `src/dataset.py`.
+
+`batch_size` настраиваемый, по умолчанию `64`.
+
+```python
+from pathlib import Path
+from src.dataset import get_dataloaders
+
+train_loader, test_loader = get_dataloaders(
+    data_dir=Path("data/processed"),
+    batch_size=64,
+)
+```
+
+Если нужен другой размер батча, просто меняется параметр:
+
+```python
+train_loader, test_loader = get_dataloaders(
+    data_dir=Path("data/processed"),
+    batch_size=128,
+)
+```
+
+### 4) Какой формат возвращает датасет
+
+Для каждого примера `dataset[i]`:
+
+- `image`: `torch.float32`, форма `[1, 28, 28]`, диапазон значений `0..1`
+- `label`: целое число класса `0..9`
+
+Для батча из `DataLoader`:
+
+- `images`: форма `[B, 1, 28, 28]`
+- `labels`: форма `[B]`, тип `torch.int64`
+
+Это совместимо с `nn.CrossEntropyLoss()` и обычной CNN с входом `1x28x28`.
