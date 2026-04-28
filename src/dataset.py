@@ -1,5 +1,5 @@
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 import torch.nn as nn
 import numpy as np
 from pathlib import Path
@@ -57,6 +57,35 @@ class MNISTDataset(Dataset):
             img = img / 255.0
 
         return img, label
+
+
+def get_dataloaders(
+    data_dir: Path,
+    batch_size: int = 64,
+    num_workers: int = 0,
+    pin_memory: bool = False,
+):
+    train_dataset = MNISTDataset(data_dir=Path(data_dir), train=True)
+    test_dataset = MNISTDataset(data_dir=Path(data_dir), train=False)
+
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+    )
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+    )
+
+    return train_loader, test_loader
+
+
 class MINISTModel(nn.Module):
     def __init__(self):
         super().__init__()

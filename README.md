@@ -56,18 +56,29 @@ source .venv/bin/activate
 - `test_images.npy`
 - `test_labels.npy`
 
-### 3) Подключение датасета и DataLoader
+### 3) Подключение для ML-разработчика
+
+Рекомендуемый способ: использовать `get_dataloaders` из `src/dataset.py`.
+
+`batch_size` настраиваемый, по умолчанию `64`.
 
 ```python
 from pathlib import Path
-from torch.utils.data import DataLoader
-from src.dataset import MNISTDataset
+from src.dataset import get_dataloaders
 
-train_ds = MNISTDataset(Path("data/processed"), train=True)
-test_ds = MNISTDataset(Path("data/processed"), train=False)
+train_loader, test_loader = get_dataloaders(
+    data_dir=Path("data/processed"),
+    batch_size=64,
+)
+```
 
-train_loader = DataLoader(train_ds, batch_size=64, shuffle=True)
-test_loader = DataLoader(test_ds, batch_size=64, shuffle=False)
+Если нужен другой размер батча, просто меняется параметр:
+
+```python
+train_loader, test_loader = get_dataloaders(
+    data_dir=Path("data/processed"),
+    batch_size=128,
+)
 ```
 
 ### 4) Какой формат возвращает датасет
