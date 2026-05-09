@@ -49,8 +49,8 @@ class MINISTModel(nn.Module):
             nn.Linear(in_features=256, out_features=10),
         )
 
-        def forward(self, x: torch.Tensor) -> torch.Tensor:
-            x = self.conv_block1(x)
-            x = self.conv_block2(x)
-            x = self.classifier(x)
-            return x
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.conv_block1(x)
+        x = self.conv_block2(x)
+        x = self.classifier(x)
+        return x
