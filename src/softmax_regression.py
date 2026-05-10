@@ -2,12 +2,13 @@ import numpy as np
 import pandas as pd
 
 class SoftmaxRegression:
-    def __init__(self, learning_rate=0.2, tolerance=0.00001, max_iter=1000):
+    def __init__(self, learning_rate=1.13, tolerance=0.00001, max_iter=1000):
         self.learning_rate = learning_rate
         self.tolerance = tolerance
         self.max_iter = max_iter
 
     def _softmax(self, predictions):
+        predictions = predictions - np.max(predictions, axis=1, keepdims=True)
         exp = np.exp(predictions)
         return exp / np.sum(exp, axis=1, keepdims=True)
 
