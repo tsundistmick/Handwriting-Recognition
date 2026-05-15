@@ -1,34 +1,54 @@
 # Скрипты данных
 
-## `prepare_iam_data.py` — IAM Words
+## `check_setup.py` — проверка после установки
 
-База IAM лежит на Kaggle; скрипт **не качает** архив по ссылке сам — только распаковывает **уже скачанный** `.zip` и раскладывает файлы так, как ожидает `IAMDataset` в коде (`iam_data/iam_words/words.txt` и `iam_data/iam_words/words/...`).
+Из **корня репозитория**, с активированным venv (`pip install -r requirements.txt`):
 
-### Шаги
+```bash
+python scripts/check_setup.py
+```
 
-1. Вот тут https://www.kaggle.com/datasets/nibinv23/iam-handwriting-word-database/data скачать
-2. Из **корня репозитория** выполни распаковку (подставь путь к своему архиву):
+Проверяет по очереди:
+
+1. зависимости (`torch`, `numpy`, `Pillow`);
+2. MNIST в `data/processed/` и `MNISTModel`;
+3. IAM на диске (`words.txt`, папка `words/` с png);
+4. split train/val по писателям;
+5. `IAMDataset` — чтение одной картинки.
+
+Если в конце `все проверки прошли` — окружение и лоадеры готовы к обучению.
+
+---
+
+## `prepare_iam_data.py` — распаковка IAM Words
+
+База IAM на Kaggle; скрипт **не качает** архив сам — только распаковывает **уже скачанный** `.zip` в `iam_data/iam_words/`.
+
+1. Скачать: https://www.kaggle.com/datasets/nibinv23/iam-handwriting-word-database/data  
+2. Распаковать:
 
    ```bash
    python scripts/prepare_iam_data.py extract --archive "C:\путь\к\скачанному.zip"
    ```
 
-   По умолчанию данные попадут в каталог `iam_data` рядом с корнем репозитория. Другой каталог:
+3. Проверить окружение целиком:
 
    ```bash
-   python scripts/prepare_iam_data.py extract --archive "C:\путь\к.zip" --dest "D:\data\iam_data"
+   python scripts/check_setup.py
    ```
 
-3. Проверить, что всё на месте (без распаковки, если данные уже лежат):
+Другой каталог для данных:
 
-   ```bash
-   python scripts/prepare_iam_data.py verify
-   ```
+```bash
+python scripts/prepare_iam_data.py extract --archive "C:\путь\к.zip" --dest "D:\data\iam_data"
+```
 
-   С другим `--dest` — так же, как в `extract`.
+Только проверка файлов IAM (без PyTorch):
 
-### Если `extract` пишет, что не нашёл `words.txt` + `words/`
+```bash
+python scripts/prepare_iam_data.py verify
+```
 
-Внутри твоего архива может быть другая структура. Распакуй zip вручную, найди пару «`words.txt` и соседняя папка `words/`» и вручную положи их в `iam_data/iam_words/`, затем запусти `verify`.
+### Если `extract` не нашёл `words.txt` + `words/`
 
-# Соре у меня просто гит уже не тянет такие файлы коммитить совсем(
+Распакуй zip вручную, найди пару «`words.txt` и соседняя папка `words/`» и положи в `iam_data/iam_words/`, затем снова `python scripts/check_setup.py`.

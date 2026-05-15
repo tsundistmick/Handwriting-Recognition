@@ -1,8 +1,13 @@
+import random
 import re
 import torch
 from torch.utils.data import Dataset
 from pathlib import Path
+from typing import Literal
 import numpy as np
+
+IAM_VAL_RATIO = 0.2
+IAM_SPLIT_SEED = 42
 
 
 class MNISTDataset(Dataset):
@@ -58,6 +63,56 @@ def _parse_iam_words_line(line: str):
     return word_id, status, text
 
 
+def _iam_writer_id(word_id: str) -> str:
+    return word_id.split("-", 1)[0]
+
+
+def _iam_val_writers(
+    writer_counts: dict[str, int],
+    val_ratio: float,
+    seed: int,
+) -> set[str]:
+    writers = list(writer_counts.items())
+    rng = random.Random(seed)
+    rng.shuffle(writers)
+    writers.sort(key=lambda item: item[1], reverse=True)
+
+    total = sum(count for _, count in writers)
+    target_val = total * val_ratio
+
+    val_writers: set[str] = set()
+    val_count = 0
+    for writer_id, count in writers:
+        if val_count < target_val:
+            val_writers.add(writer_id)
+            val_count += count
+    return val_writers
+
+
+def _filter_iam_entries_by_split(
+    entries: list[tuple[str, str]],
+    split: Literal["train", "val"],
+    val_ratio: float,
+    seed: int,
+) -> list[tuple[str, str]]:
+    writer_counts: dict[str, int] = {}
+    for word_id, _ in entries:
+        writer_id = _iam_writer_id(word_id)
+        writer_counts[writer_id] = writer_counts.get(writer_id, 0) + 1
+
+    val_writers = _iam_val_writers(writer_counts, val_ratio, seed)
+    if split == "val":
+        allowed = val_writers
+    else:
+        allowed = set(writer_counts) - val_writers
+
+    return [
+        (word_id, text)
+        for word_id, text in entries
+        if _iam_writer_id(word_id) in allowed
+    ]
+
+
 class IAMDataset(Dataset):
     def __init__(
         self,
@@ -67,6 +122,9 @@ class IAMDataset(Dataset):
         only_ok: bool = True,
         skip_missing_files: bool = True,
         target_height: int | None = 32,
+        split: Literal["train", "val"] | None = None,
+        val_ratio: float = IAM_VAL_RATIO,
+        split_seed: int = IAM_SPLIT_SEED,
     ):
         iam_root = Path(iam_root)
         if words_list is None:
@@ -94,6 +152,11 @@ class IAMDataset(Dataset):
                 if skip_missing_files and not img_path.is_file():
                     continue
                 entries.append((word_id, text))
+
+        if split is not None:
+            entries = _filter_iam_entries_by_split(
+                entries, split, val_ratio, split_seed
+            )
 
         self._entries = entries
 
