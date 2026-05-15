@@ -27,4 +27,39 @@
 
 Сейчас проект открытый, но коммитить туда могут только дозволенные лица, вроде.
 
-## :)
+## Как пользоваться новым лоадером (IAM)
+
+В `src/dataset.py` есть класс **`IAMDataset`** — по смыслу как `MNISTDataset`, только для слов из IAM: на выходе картинка и **текст слова** (строка), а не цифра.
+
+Сначала скачай архив IAM с Kaggle и распакуй: `python scripts/prepare_iam_data.py extract --archive "путь/к/архиву.zip"` (подробности в [scripts/README.md](scripts/README.md)). После этого данные лежат в `iam_data/iam_words/` (`words.txt` + папка `words/` с png).
+
+**Минимальный пример** (из корня репозитория, с установленным `requirements.txt`):
+
+```python
+from pathlib import Path
+from torch.utils.data import DataLoader
+from dataset import IAMDataset
+
+iam_root = Path("iam_data")
+
+train_ds = IAMDataset(iam_root, split="train")
+val_ds = IAMDataset(iam_root, split="val")
+
+train_loader = DataLoader(train_ds, batch_size=32, shuffle=True)
+```
+
+- `split="train"` / `"val"` — разбиение **по писателям** (~20% слов в val). Один и тот же split при каждом запуске, если не менять seed (см. ниже).
+- `split=None` — весь датасет без разбиения.
+
+**Полезные параметры:**
+
+| Параметр | По умолчанию | Зачем |
+|----------|--------------|--------|
+| `split_seed` | `42` (`IAM_SPLIT_SEED`) | какой вариант train/val; пишите в лог при обучении |
+| `val_ratio` | `0.2` (`IAM_VAL_RATIO`) | доля слов в validation |
+| `skip_missing_files` | `True` | пропускать слова без png; если всё распаковано и тормозит — `False` |
+| `target_height` | `32` | высота картинки после resize |
+
+**Что приходит из лоадера:** тензор `(1, H, W)` (серый, 0…1) и строка-подпись. Ширина `W` у разных слов **разная** — для батча нужен свой `collate_fn` (padding). Модель из `neural_network.py` под MNIST **напрямую не подходит** — другие метки и задача.
+
+Проверить, что у вас всё ок: `python scripts/check_setup.py`.
