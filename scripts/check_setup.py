@@ -6,7 +6,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC = REPO_ROOT / "src"
-IAM_ROOT = REPO_ROOT / "iam_data"
+IAM_ROOT = REPO_ROOT / "iam"
 MNIST_DIR = REPO_ROOT / "data" / "processed"
 
 if str(SRC) not in sys.path:
@@ -27,9 +27,10 @@ def _step(name: str, fn) -> bool:
 def check_imports() -> None:
     import torch
     import numpy
+    import torchvision
     from PIL import Image
 
-    _ = (torch, numpy, Image)
+    _ = (torch, numpy, torchvision, Image)
 
 
 def check_mnist() -> None:
@@ -81,89 +82,78 @@ def check_iam_files() -> None:
     code = verify(IAM_ROOT)
     if code != 0:
         raise RuntimeError(
-            "IAM на диске: нет iam_data/iam_words/words.txt или words/*.png — "
-            "см. scripts/README.md (prepare_iam_data.py extract)"
+            "IAM на диске неполный — см. scripts/README.md "
+            "(prepare_iam_data.py extract --lines ... --ascii ... --splits ...)"
         )
 
 
-def check_iam_split() -> None:
-    from dataset import (
-        IAM_SPLIT_SEED,
-        IAM_VAL_RATIO,
-        _filter_iam_entries_by_split,
-        _iam_writer_id,
-        _parse_iam_words_line,
-    )
+def check_iam_splits() -> None:
+    from text import load_split_ids
 
-    words_txt = IAM_ROOT / "iam_words" / "words.txt"
-    if not words_txt.is_file():
-        raise FileNotFoundError(str(words_txt))
+    train_ids = load_split_ids(IAM_ROOT, "train")
+    val_ids = load_split_ids(IAM_ROOT, "val")
+    test_ids = load_split_ids(IAM_ROOT, "test")
 
-    entries: list[tuple[str, str]] = []
-    with words_txt.open(encoding="utf-8", errors="replace") as f:
-        for raw in f:
-            parsed = _parse_iam_words_line(raw)
-            if parsed is None:
-                continue
-            word_id, status, text = parsed
-            if status != "ok":
-                continue
-            entries.append((word_id, text))
+    if not train_ids or not val_ids or not test_ids:
+        raise ValueError(
+            f"один из сплитов пуст: train={len(train_ids)}, "
+            f"val={len(val_ids)}, test={len(test_ids)}"
+        )
 
-    if not entries:
-        raise ValueError("в words.txt нет строк со статусом ok")
+    overlap_tv = set(train_ids) & set(val_ids)
+    overlap_tt = set(train_ids) & set(test_ids)
+    if overlap_tv or overlap_tt:
+        raise ValueError(
+            f"сплиты пересекаются: train∩val={len(overlap_tv)}, "
+            f"train∩test={len(overlap_tt)}"
+        )
 
-    train = _filter_iam_entries_by_split(
-        entries, "train", IAM_VAL_RATIO, IAM_SPLIT_SEED
-    )
-    val = _filter_iam_entries_by_split(
-        entries, "val", IAM_VAL_RATIO, IAM_SPLIT_SEED
-    )
-    train_writers = {_iam_writer_id(w) for w, _ in train}
-    val_writers = {_iam_writer_id(w) for w, _ in val}
-
-    if len(train) + len(val) != len(entries):
-        raise ValueError("train + val != full")
-    if train_writers & val_writers:
-        raise ValueError("писатели пересекаются между train и val")
-
-    ratio = len(val) / len(entries)
     print(
-        f"      IAM split: train={len(train)}, val={len(val)}, "
-        f"val_ratio={ratio:.1%}, writers={len(train_writers)}/{len(val_writers)}, "
-        f"seed={IAM_SPLIT_SEED}"
+        f"      IAM splits: train={len(train_ids)}, val={len(val_ids)}, "
+        f"test={len(test_ids)}"
     )
 
 
 def check_iam_loader() -> None:
-    from dataset import IAMDataset
+    import torch
+    from torch.utils.data import DataLoader
 
-    ds = IAMDataset(IAM_ROOT, split="train", skip_missing_files=False)
+    from text import IAMDataset, collate_fn, load_split_ids, NUM_CLASSES
+
+    val_ids = load_split_ids(IAM_ROOT, "val")
+    ds = IAMDataset(IAM_ROOT, val_ids[:8], img_height=64, augment=False)
     if len(ds) == 0:
-        raise ValueError("IAMDataset train пуст")
+        raise ValueError("IAMDataset пуст на val[:8] — нет картинок строк")
 
-    img, text = ds[0]
-    if img.ndim != 3 or img.shape[0] != 1:
-        raise ValueError(f"неверная форма изображения: {tuple(img.shape)}")
-    if not isinstance(text, str) or not text:
-        raise ValueError("пустая текстовая метка")
+    loader = DataLoader(ds, batch_size=4, shuffle=False, collate_fn=collate_fn)
+    images, targets, target_lens, texts = next(iter(loader))
 
-    val_ds = IAMDataset(IAM_ROOT, split="val", skip_missing_files=False)
-    if len(val_ds) == 0:
-        raise ValueError("IAMDataset val пуст")
+    if images.ndim != 4 or images.shape[1] != 1 or images.shape[2] != 64:
+        raise ValueError(f"неверный батч картинок: {tuple(images.shape)}")
+    if targets.dtype != torch.long or target_lens.dtype != torch.long:
+        raise ValueError("targets/target_lens должны быть long")
+    if int(target_lens.sum()) != int(targets.numel()):
+        raise ValueError("сумма длин не совпадает с числом таргетов")
+    if not texts or not all(isinstance(t, str) for t in texts):
+        raise ValueError("texts должен быть списком строк")
 
-    print(f"      IAM loader: train={len(ds)}, val={len(val_ds)}, sample={text!r}")
+    sample = texts[0][:60] + ("…" if len(texts[0]) > 60 else "")
+    print(
+        f"      IAM batch: images={tuple(images.shape)}, "
+        f"targets={tuple(targets.shape)}, num_classes={NUM_CLASSES}, "
+        f"sample={sample!r}"
+    )
 
 
 def main() -> int:
     print(f"Проверка репозитория: {REPO_ROOT}\n")
 
     steps = [
-        ("зависимости (torch, numpy, Pillow)", check_imports),
+        ("зависимости (torch, numpy, torchvision, Pillow)", check_imports),
         ("MNIST + MNISTModel", check_mnist),
         ("IAM файлы на диске", check_iam_files),
-        ("IAM split по писателям", check_iam_split),
-        ("IAMDataset (чтение картинки)", check_iam_loader),
+        ("IAM splits (train/val/test из text.py)", check_iam_splits),
+        ("IAMDataset + collate_fn (один батч)", check_iam_loader),
     ]
 
     failed = [name for name, fn in steps if not _step(name, fn)]
@@ -174,7 +164,7 @@ def main() -> int:
         print("Не прошли:", ", ".join(failed))
         return 1
 
-    print("Готово: все проверки прошли. Можно писать обучение.")
+    print("Готово: все проверки прошли. Можно запускать обучение (python src/text.py).")
     return 0
 
 

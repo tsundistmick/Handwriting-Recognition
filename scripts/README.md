@@ -10,45 +10,61 @@ python scripts/check_setup.py
 
 Проверяет по очереди:
 
-1. зависимости (`torch`, `numpy`, `Pillow`);
+1. зависимости (`torch`, `numpy`, `torchvision`, `Pillow`);
 2. MNIST в `data/processed/` и `MNISTModel`;
-3. IAM на диске (`words.txt`, папка `words/` с png);
-4. split train/val по писателям;
-5. `IAMDataset` — чтение одной картинки.
+3. IAM на диске (`iam/lines/`, `iam/gt/lines.txt`, `iam/splits/`);
+4. сплиты train/val/test через `load_split_ids` из `src/text.py`;
+5. `IAMDataset` + `collate_fn` — собирается ли один батч.
 
-Если в конце `все проверки прошли` — окружение и лоадеры готовы к обучению.
+Если в конце «все проверки прошли» — можно запускать обучение:
+
+```bash
+python src/text.py
+```
 
 ---
 
-## `prepare_iam_data.py` — распаковка IAM Words
+## `prepare_iam_data.py` — распаковка IAM (line-level)
 
-База IAM на Kaggle; скрипт **не качает** архив сам — только распаковывает **уже скачанный** `.zip` в `iam_data/iam_words/`.
+Базовый источник — официальный [IAM Handwriting Database](https://fki.tic.heia-fr.ch/databases/iam-handwriting-database) (FKI, University of Bern). Скрипт **не качает** архивы сам — только распаковывает уже скачанные `.tgz` / `.zip` в `iam/`.
 
-1. Скачать: https://www.kaggle.com/datasets/nibinv23/iam-handwriting-word-database/data  
-2. Распаковать:
+### Что нужно скачать (после регистрации на сайте FKI)
 
-   ```bash
-   python scripts/prepare_iam_data.py extract --archive "C:\путь\к\скачанному.zip"
-   ```
+| Архив | Зачем | Где |
+|-------|-------|------|
+| `lines.tgz` (~640 MB) | картинки строк → `iam/lines/` | `data/lines.tgz` на сайте |
+| `ascii.tgz` (~3 MB) | `lines.txt` с транскрипциями → `iam/gt/lines.txt` | `data/ascii.tgz` |
+| `largeWriterIndependentTextLineRecognitionTask.zip` (~25 KB, опц.) | официальные сплиты → `iam/splits/` | [прямая ссылка](https://fki.tic.heia-fr.ch/static/zip/largeWriterIndependentTextLineRecognitionTask.zip), без регистрации |
 
-3. Проверить окружение целиком:
+`forms*.tgz`, `words.tgz`, `sentences.tgz`, `xml.tgz` — **не нужны** для обучения по строкам.
 
-   ```bash
-   python scripts/check_setup.py
-   ```
-
-Другой каталог для данных:
+### Распаковка
 
 ```bash
-python scripts/prepare_iam_data.py extract --archive "C:\путь\к.zip" --dest "D:\data\iam_data"
+python scripts/prepare_iam_data.py extract \
+  --lines  "C:/путь/к/lines.tgz" \
+  --ascii  "C:/путь/к/ascii.tgz" \
+  --splits "C:/путь/к/largeWriterIndependentTextLineRecognitionTask.zip"
 ```
 
-Только проверка файлов IAM (без PyTorch):
+`--splits` опционален. Без него `text.py` сам уйдёт на fallback **80/10/10** по строкам (без writer-independent — обучение пройдёт, метрики на val/test могут быть оптимистичнее «по статьям»).
+
+Поменять каталог назначения (по умолчанию `iam/` в корне репо):
+
+```bash
+python scripts/prepare_iam_data.py extract --dest "D:/data/iam" --lines ... --ascii ...
+```
+
+### Только проверка (без распаковки)
 
 ```bash
 python scripts/prepare_iam_data.py verify
 ```
 
-### Если `extract` не нашёл `words.txt` + `words/`
+Покажет, сколько строк со статусом `ok` в `lines.txt`, сколько `.png` в `lines/` и какие сплит-файлы найдены.
 
-Распакуй zip вручную, найди пару «`words.txt` и соседняя папка `words/`» и положи в `iam_data/iam_words/`, затем снова `python scripts/check_setup.py`.
+### Если что-то пошло не так
+
+- **«в архиве не найдено картинок строк»** — проверьте, что это именно `lines.tgz` (внутри должна быть структура `<writer>/<writer-form>/<line-id>.png`, например `a01/a01-000u/a01-000u-00.png`).
+- **«не найден lines.txt»** — нужен `ascii.tgz`, не `xml.tgz` и не `words.txt`.
+- **сплиты пустые в `verify`** — внутри splits-zip ищутся файлы `trainset.txt`, `validationset1.txt`, `validationset2.txt`, `testset.txt`.

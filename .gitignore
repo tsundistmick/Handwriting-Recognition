@@ -205,3 +205,15 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# IAM lines dataset (распаковывается локально, ~1.5GB, в репо не коммитим)
+/iam/
+
+# legacy word-level (больше не используется, может остаться у кого-то локально)
+/iam_data/
+
+# Сохранённые веса моделей
+*.pth
+
+# Опциональная KenLM языковая модель
+/lm/
