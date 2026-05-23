@@ -1,0 +1,542 @@
+[
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.8864,
+        "parameters": {
+          "learning_rate": 0.2,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9264,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:26:10.389604"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9108,
+        "parameters": {
+          "learning_rate": 0.2,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:38:36.706363"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.906,
+        "parameters": {
+          "learning_rate": 0.1,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:42:25.834890"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.906,
+        "parameters": {
+          "learning_rate": 0.1,
+          "max_iter": 2000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:46:58.341196"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.906,
+        "parameters": {
+          "learning_rate": 0.1,
+          "max_iter": 3000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:49:54.182316"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9108,
+        "parameters": {
+          "learning_rate": 0.2,
+          "max_iter": 2000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:54:07.195059"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9141,
+        "parameters": {
+          "learning_rate": 0.3,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:55:54.482850"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9141,
+        "parameters": {
+          "learning_rate": 0.3,
+          "max_iter": 2000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:57:39.545902"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9161,
+        "parameters": {
+          "learning_rate": 0.5,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T22:58:51.413881"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9172,
+        "parameters": {
+          "learning_rate": 0.6,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:00:18.321047"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9182,
+        "parameters": {
+          "learning_rate": 0.7,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:01:39.883006"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9189,
+        "parameters": {
+          "learning_rate": 0.8,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:02:58.168870"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9195,
+        "parameters": {
+          "learning_rate": 0.9,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:04:16.255179"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.92,
+        "parameters": {
+          "learning_rate": 1,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:05:46.148603"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9199,
+        "parameters": {
+          "learning_rate": 1.2,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:07:31.846651"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9203,
+        "parameters": {
+          "learning_rate": 1.1,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:08:59.280483"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9205,
+        "parameters": {
+          "learning_rate": 1.15,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:10:27.481962"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9204,
+        "parameters": {
+          "learning_rate": 1.17,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:11:35.770765"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9204,
+        "parameters": {
+          "learning_rate": 1.16,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:12:47.427237"
+  },
+  {
+    "model_comparison": {
+      "my_softmax_regression": {
+        "accuracy": 0.9204,
+        "parameters": {
+          "learning_rate": 1.13,
+          "max_iter": 1000,
+          "tolerance": 1e-05
+        }
+      },
+      "sklearn_logistic_regression": {
+        "accuracy": 0.9215,
+        "parameters": {
+          "max_iter": 1000,
+          "multi_class": "multinomial",
+          "solver": "lbfgs"
+        }
+      }
+    },
+    "dataset_info": {
+      "train_samples": 60000,
+      "test_samples": 10000,
+      "n_features": 784,
+      "n_classes": 10
+    },
+    "timestamp": "2026-05-09T23:14:01.758034"
+  }
+]
