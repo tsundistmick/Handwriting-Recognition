@@ -619,11 +619,11 @@ def main():
     SAVE_PATH = Path("./best_crnn.pth")
     ARPA_PATH = Path("./lm/english.arpa")
 
-    BATCH_SIZE   = 16
+    BATCH_SIZE   = 32
     NUM_EPOCHS   = 30
     LR           = 1e-3
     WEIGHT_DECAY = 1e-4
-    NUM_WORKERS  = 4
+    NUM_WORKERS  = 6
     IMG_HEIGHT   = 64
     BEAM_WIDTH   = 10
     LM_WEIGHT    = 0.3
